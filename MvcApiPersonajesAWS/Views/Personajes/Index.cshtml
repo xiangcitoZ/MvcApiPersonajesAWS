@@ -1,0 +1,44 @@
+﻿
+
+@section Scripts {
+<script>
+    $(document).ready(function() {
+        $("#botonpersonas").click(function() {
+            var url =
+                    "https://apipersonajesaws2023xzx.azurewebsites.net/api/personajes";
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function(data) {
+                    var html = "";
+                    $.each(data, function(index, persona){
+                        html += "<tr>";
+                        html += "<td>" + persona.idPersona + "</td>";
+                        html += "<td>" + persona.Nombre + "</td>";
+                        html += "<td>" + persona.Imagen + "</td>";                      
+                        html += "</tr>";
+                        $("#tablapersonas tbody").html(html);
+                    })
+                }
+            });
+        })
+    });
+</script>
+}
+<div class="text-center">
+    <h1 class="display-4">Cliente Api Core</h1>
+    <button type="button" id="botonpersonas"
+            class="btn btn-outline-dark">
+        Cargar personas
+    </button>
+    <table id="tablapersonas" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Imagen</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
