@@ -13,9 +13,9 @@
                     var html = "";
                     $.each(data, function(index, persona){
                         html += "<tr>";
-                        html += "<td>" + persona.idPersona + "</td>";
+                        html += "<td>" + persona.idPersonaje + "</td>";
                         html += "<td>" + persona.nombre + "</td>";
-                        html += "<td>" "<img src='"> + persona.imagen + <'" /img>" "</td>";                      
+                            html += "<td><img style='width:150px;height:150px;'src = '" + persona.imagen + "' > </td>";
                         html += "</tr>";
                         $("#tablapersonas tbody").html(html);
                     })
