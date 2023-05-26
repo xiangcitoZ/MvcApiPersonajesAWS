@@ -21,8 +21,13 @@ namespace MvcApiPersonajesAWS.Services
             string request = "/api/personajes";
             //UTILIZAMOS UN MANEJADOR PARA LA PETICION DEL HttpClient
             var handler = new HttpClientHandler();
-            
+            handler.ServerCertificateCustomValidationCallback =
+                   (message, cert, chain, SslPolicyErrors) =>
+                   {
+                       return true;
+                   };
             HttpClient client = new HttpClient(handler);
+
             client.BaseAddress = new Uri(this.UrlApi);
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Accept.Add(this.Header);
