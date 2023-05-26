@@ -21,12 +21,7 @@ namespace MvcApiPersonajesAWS.Services
             string request = "/api/personajes";
             //UTILIZAMOS UN MANEJADOR PARA LA PETICION DEL HttpClient
             var handler = new HttpClientHandler();
-            //INDICAMOS AL MANEJADOR COMO SE COMPORTARA AL RECIBIR PETICIONES
-            handler.ServerCertificateCustomValidationCallback =
-                (message, cert, chain, SslPolicyErrors) =>
-                {
-                    return true;
-                };
+            
             HttpClient client = new HttpClient(handler);
             client.BaseAddress = new Uri(this.UrlApi);
             client.DefaultRequestHeaders.Clear();
@@ -41,24 +36,38 @@ namespace MvcApiPersonajesAWS.Services
 
 
         private async Task<T> CallApiAsync<T>(string request)
-        {
-            using (HttpClient client = new HttpClient())
+        {   
+
+            using(HttpClientHandler handler = new HttpClientHandler()) 
             {
-                client.BaseAddress = new Uri(this.UrlApi);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(this.Header);
-                HttpResponseMessage response =
-                    await client.GetAsync(request);
-                if (response.IsSuccessStatusCode)
+                //INDICAMOS AL MANEJADOR COMO SE COMPORTARA AL RECIBIR PETICIONES
+                handler.ServerCertificateCustomValidationCallback =
+                    (message, cert, chain, SslPolicyErrors) =>
+                    {
+                        return true;
+                    };
+
+                using (HttpClient client = new HttpClient(handler))
                 {
-                    T data = await response.Content.ReadAsAsync<T>();
-                    return data;
+                    client.BaseAddress = new Uri(this.UrlApi);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(this.Header);
+                    HttpResponseMessage response =
+                        await client.GetAsync(request);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        T data = await response.Content.ReadAsAsync<T>();
+                        return data;
+                    }
+                    else
+                    {
+                        return default(T);
+                    }
                 }
-                else
-                {
-                    return default(T);
-                }
+
             }
+
+            
         }
 
         public async Task<List<Personaje>> GetPersonajesAsync()
